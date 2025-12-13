@@ -4,7 +4,6 @@ import mediapipe as mp
 mp_hands = mp.solutions.hands
 mp_draw = mp.solutions.drawing_utils
 
-# Fingertip landmark indexes in MediaPipe
 FINGERTIPS = [4, 8, 12, 16, 20]  # Thumb, Index, Middle, Ring, Pinky
 
 def main():
@@ -22,7 +21,7 @@ def main():
             if not ret:
                 break
 
-            frame = cv2.flip(frame, 1)  # Mirror image
+            frame = cv2.flip(frame, 1)  
             rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
             result = hands.process(rgb)
@@ -30,23 +29,19 @@ def main():
             if result.multi_hand_landmarks:
                 for hand_landmarks in result.multi_hand_landmarks:
 
-                    # Draw the entire hand skeleton
                     mp_draw.draw_landmarks(
                         frame, 
                         hand_landmarks, 
                         mp_hands.HAND_CONNECTIONS
                     )
 
-                    # Detect and highlight fingertips
                     h, w, c = frame.shape
                     for tip_id in FINGERTIPS:
                         lm = hand_landmarks.landmark[tip_id]
                         cx, cy = int(lm.x * w), int(lm.y * h)
 
-                        # Draw a circle on each fingertip
                         cv2.circle(frame, (cx, cy), 10, (255, 0, 255), cv2.FILLED)
 
-                        # Print coordinates
                         print(f"Fingertip {tip_id}: {cx}, {cy}")
 
             cv2.imshow("Hand Tracking", frame)
