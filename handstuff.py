@@ -1,10 +1,29 @@
 import cv2
 import mediapipe as mp
+import math 
 
 mp_hands = mp.solutions.hands
 mp_draw = mp.solutions.drawing_utils
 
-FINGERTIPS = [4, 8, 12, 16, 20]  # Thumb, Index, Middle, Ring, Pinky
+FINGERTIPS = [4, 8, 12, 16, 20]  
+
+def extract_hand_features(hand_landmarks):
+    """
+    Extracts index fingertip coordinates and computes pinch distance between index and thumb tips.
+    """
+    index_tip = hand_landmarks.landmark[8]
+    index_x, index_y = index_tip.x, index_tip.y
+
+    thumb_tip = hand_landmarks.landmark[4]
+    thumb_x, thumb_y = thumb_tip.x, thumb_tip.y
+
+    pinch_distance = math.sqrt((index_x - thumb_x) ** 2 + (index_y - thumb_y) ** 2)
+
+    return {
+        "x": index_x,
+        "y": index_y,
+        "pinch": pinch_distance
+    }
 
 def main():
     cap = cv2.VideoCapture(0)
@@ -34,6 +53,9 @@ def main():
                         hand_landmarks, 
                         mp_hands.HAND_CONNECTIONS
                     )
+
+                    features = extract_hand_features(hand_landmarks)
+                    print(features)
 
                     h, w, c = frame.shape
                     for tip_id in FINGERTIPS:
