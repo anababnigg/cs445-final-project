@@ -32,7 +32,7 @@ Note: some operations use an earlier (1.x) form of numpy. If issues happen, try 
 
 ## Setup
 
-Option A — Conda
+Using Conda
 ```bash
 conda create -n cs445-final python=3.11 -y
 conda activate cs445-final
