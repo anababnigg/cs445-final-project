@@ -52,10 +52,6 @@ Note: the camera view is mirrored.
 - Octave shift:
     - Thumb + middle pinch -> Oct: +1
     - Thumb + ring pinch -> Oct: −1
-- HUD (top-right by default)
-
-Text: Freq, Vol, Pinch (and normalized distance), Hold, Oct, FPS
-Bars: vertical VOL bar, horizontal FREQ bar
 
 HUD Elements:
 - Text: Freq, Vol, Pinch (with normalized pinch distance), Hold, Oct, FPS
