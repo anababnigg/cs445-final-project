@@ -12,6 +12,15 @@ ALPHA = 0.2
 prev_frequency = None
 prev_volume = None
 
+from audio_engine import (
+    start_audio,
+    lock,
+    audio_frequency,
+    audio_volume,
+    audio_pinch
+)
+
+
 def map_controls(x, y, pinch_distance):
     """
     x, y: floats in [0, 1]
@@ -40,8 +49,6 @@ def smooth_value(current, previous, alpha):
         return current  
     return alpha * current + (1 - alpha) * previous
 
-
-
 def extract_hand_features(hand_landmarks):
     """
     Extracts index fingertip coordinates and computes pinch distance between index and thumb tips.
@@ -64,6 +71,7 @@ def extract_hand_features(hand_landmarks):
 
 def main():
     cap = cv2.VideoCapture(0)
+    stream = start_audio()
 
     with mp_hands.Hands(
         static_image_mode=False,
@@ -109,6 +117,13 @@ def main():
 
                     print(f"Smoothed frequency: {frequency:.1f}, volume: {volume:.2f}")
 
+                    from audio_engine import lock
+                    import audio_engine
+                    
+                    with lock:
+                        audio_engine.audio_frequency = frequency
+                        audio_engine.audio_volume = volume
+                        audio_engine.audio_pinch = pinch
 
                     color = (0, 0, 255) if pinch else (0, 255, 0)
                     label = "PINCH" if pinch else "OPEN"
@@ -141,6 +156,10 @@ def main():
 
     cap.release()
     cv2.destroyAllWindows()
+
+    stream.stop()
+    stream.close()
+
 
 
 if __name__ == "__main__":
