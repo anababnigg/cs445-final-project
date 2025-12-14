@@ -31,7 +31,7 @@ def map_controls(x, y, pinch_distance):
     y = max(0.0, min(1.0, y))
 
     frequency = 200 + 800 * x       
-    volume = 0.8 * y               
+    volume = 0.8 * (1.0 - y)            
     pinch = pinch_distance < 0.05    
 
     return frequency, volume, pinch
